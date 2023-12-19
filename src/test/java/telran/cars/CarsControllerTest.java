@@ -56,7 +56,6 @@ class CarsControllerTest {
 				.perform(post("http://localhost:8080/cars").contentType(MediaType.APPLICATION_JSON).content(jsonCarDto))
 				.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 		assertEquals(jsonCarDto, actualJSON);
-
 	}
 
 	@Test
@@ -133,6 +132,7 @@ class CarsControllerTest {
 	@Test
 	void testDeletePersonNotFound() throws Exception {
 		when(carsService.deletePerson(PERSON_ID)).thenThrow(new NotFoundException(PERSON_NOT_FOUND_MESSAGE));
+
 		String actualJSON = mockMvc.perform(delete("http://localhost:8080/cars/person/" + PERSON_ID))
 				.andExpect(status().isNotFound()).andReturn().getResponse().getContentAsString();
 		assertEquals(PERSON_NOT_FOUND_MESSAGE, actualJSON);

@@ -1,4 +1,4 @@
-package telran.cars;
+package telran.cars.exception.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
