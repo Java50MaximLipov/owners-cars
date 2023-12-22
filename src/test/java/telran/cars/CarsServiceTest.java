@@ -255,7 +255,6 @@ class CarsControllerTest {
 	@Test
 	void addPersonWrongIdTest() throws Exception {
 		wrongPersonDataRequest(personWrongId, WRONG_MAX_PERSON_ID_VALUE);
-
 	}
 
 	@Test
@@ -340,5 +339,4 @@ class CarsControllerTest {
 				.andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
 		assertEquals(expectedMessage, response);
 	}
-
 }
