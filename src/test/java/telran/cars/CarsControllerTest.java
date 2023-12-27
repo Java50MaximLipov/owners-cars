@@ -156,7 +156,6 @@ class CarsControllerTest {
 	@Test
 	void testDeletePersonNotFound() throws Exception {
 		when(carsService.deletePerson(PERSON_ID)).thenThrow(new NotFoundException(PERSON_NOT_FOUND_MESSAGE));
-
 		String actualJSON = mockMvc.perform(delete("http://localhost:8080/cars/person/" + PERSON_ID))
 				.andExpect(status().isNotFound()).andReturn().getResponse().getContentAsString();
 		assertEquals(PERSON_NOT_FOUND_MESSAGE, actualJSON);
@@ -255,7 +254,6 @@ class CarsControllerTest {
 	@Test
 	void addPersonWrongIdTest() throws Exception {
 		wrongPersonDataRequest(personWrongId, WRONG_MAX_PERSON_ID_VALUE);
-
 	}
 
 	@Test

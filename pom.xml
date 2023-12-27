@@ -12,7 +12,7 @@
 	<artifactId>owners-cars</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>owners-cars</name>
-	<description>Spring introduction</description>
+	<description>Spring Introduction</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

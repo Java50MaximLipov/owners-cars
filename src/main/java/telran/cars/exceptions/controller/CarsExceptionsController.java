@@ -60,4 +60,5 @@ public class CarsExceptionsController {
 		String message = JSON_TYPE_MISMATCH_MESSAGE;
 		return returnResponse(message, HttpStatus.BAD_REQUEST);
 	}
+
 }
