@@ -16,6 +16,7 @@ import telran.cars.service.model.*;
 public class CarsServiceImpl implements CarsService {
 	HashMap<Long, CarOwner> owners = new HashMap<>();
 	HashMap<String, Car> cars = new HashMap<>();
+	HashMap<String, Integer> modelsPurchaseAmounts = new HashMap<>();
 
 	@Override
 	public PersonDto addPerson(PersonDto personDto) {
@@ -24,6 +25,7 @@ public class CarsServiceImpl implements CarsService {
 			throw new IllegalStateException(String.format("person  %d already exists", id));
 		}
 		owners.put(id, new CarOwner(personDto));
+		log.debug("added person with id {}", id);
 		return personDto;
 	}
 
@@ -34,6 +36,7 @@ public class CarsServiceImpl implements CarsService {
 			throw new IllegalStateException(String.format("car %s already exists", carNumber));
 		}
 		cars.put(carNumber, new Car(carDto));
+		log.debug("added car {}", carNumber);
 		return carDto;
 	}
 
@@ -42,7 +45,14 @@ public class CarsServiceImpl implements CarsService {
 		long id = personDto.id();
 		hasCarOwner(id);
 		CarOwner carOwner = owners.get(id);
-		carOwner.setEmail(personDto.email());
+		String oldEmail = carOwner.getEmail();
+		String newEmail = personDto.email();
+		if (newEmail.equals(oldEmail)) {
+			log.warn("nothing to update");
+		} else {
+			carOwner.setEmail(newEmail);
+			log.debug("person {}, old mail - {}, new mail - {}", id, oldEmail, newEmail);
+		}
 		return personDto;
 	}
 
@@ -53,6 +63,7 @@ public class CarsServiceImpl implements CarsService {
 		List<Car> cars = carOwner.getCars();
 		cars.forEach(c -> c.setOwner(null));
 		owners.remove(id);
+		log.debug("person {} has been deleted", id);
 		return carOwner.build();
 	}
 
@@ -69,6 +80,7 @@ public class CarsServiceImpl implements CarsService {
 		CarOwner carOwner = car.getOwner();
 		carOwner.getCars().remove(car);
 		cars.remove(carNumber);
+		log.debug("car {} has been deleted", carNumber);
 		return car.build();
 	}
 
@@ -92,12 +104,16 @@ public class CarsServiceImpl implements CarsService {
 			oldOwner.getCars().remove(car);
 		}
 		if (personId != null) {
-			log.debug("new owner exists");
+
+			log.debug("new owner {}", personId);
 			hasCarOwner(personId);
 			carOwner = owners.get(personId);
 			carOwner.getCars().add(car);
+		} else {
+			log.debug("no new owner");
 		}
 		car.setOwner(carOwner);
+		modelsPurchaseAmounts.merge(car.getModel(), 1, Integer::sum);
 		return tradeDeal;
 	}
 
@@ -109,16 +125,34 @@ public class CarsServiceImpl implements CarsService {
 
 	@Override
 	public List<CarDto> getOwnerCars(long id) {
+		log.debug("getOwnerCars for owner {}", id);
 		hasCarOwner(id);
 		return owners.get(id).getCars().stream().map(Car::build).toList();
 	}
 
 	@Override
 	public PersonDto getCarOwner(String carNumber) {
+		log.debug("getCarOwner for car {}", carNumber);
 		hasCar(carNumber);
 		Car car = cars.get(carNumber);
 		CarOwner carOwner = car.getOwner();
-		return carOwner != null ? carOwner.build() : null;
+		PersonDto res = null;
+		if (carOwner != null) {
+			res = carOwner.build();
+			log.debug("car belongs to owner {}", carOwner.getId());
+		} else {
+			log.debug("car belongs to no one");
+		}
+		return res;
+	}
+
+	@Override
+	public List<String> mostPopularModels() {
+		int maxAmount = Collections.max(modelsPurchaseAmounts.values());
+		log.trace("map of amounts {}", modelsPurchaseAmounts);
+		log.debug("maximal amount of purchases is {}", maxAmount);
+		return modelsPurchaseAmounts.entrySet().stream().filter(e -> e.getValue() == maxAmount).map(e -> e.getKey())
+				.toList();
 	}
 
 }

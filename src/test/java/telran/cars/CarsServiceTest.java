@@ -2,9 +2,10 @@ package telran.cars;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,14 @@ import telran.cars.service.CarsService;
 
 @SpringBootTest
 class CarsServiceTest {
-	private static final String MODEL = "model";
+	private static final String MODEL1 = "model1";
+	private static final String MODEL2 = "model2";
+	private static final String MODEL3 = "model3";
 	private static final String CAR_NUMBER_1 = "111-11-111";
 	private static final String CAR_NUMBER_2 = "222-22-222";
+	private static final String CAR_NUMBER_3 = "333-33-333";
+	private static final String CAR_NUMBER_4 = "444-44-444";
+	private static final String CAR_NUMBER_5 = "555-55-555";
 	private static final Long PERSON_ID_1 = 123l;
 	private static final String NAME1 = "name1";
 	private static final String BIRTH_DATE_1 = "2000-10-10";
@@ -29,11 +35,13 @@ class CarsServiceTest {
 	private static final String BIRTH_DATE_2 = "2000-10-10";
 	private static final String EMAIL2 = "name2@gmail.com";
 	private static final Long PERSON_ID_NOT_EXISTS = 1111111111L;
-	private static final String CAR_NUMBER_3 = "333-33-333";
+
 	private static final String NEW_EMAIL = "name1@tel-ran.co.il";
-	CarDto car1 = new CarDto(CAR_NUMBER_1, MODEL);
-	CarDto car2 = new CarDto(CAR_NUMBER_2, MODEL);
-	CarDto car3 = new CarDto(CAR_NUMBER_3, MODEL);
+	CarDto car1 = new CarDto(CAR_NUMBER_1, MODEL1);
+	CarDto car2 = new CarDto(CAR_NUMBER_2, MODEL1);
+	CarDto car3 = new CarDto(CAR_NUMBER_3, MODEL2);
+	CarDto car4 = new CarDto(CAR_NUMBER_4, MODEL2);
+	CarDto car5 = new CarDto(CAR_NUMBER_5, MODEL3);
 	PersonDto personDto = new PersonDto(PERSON_ID_NOT_EXISTS, NAME1, BIRTH_DATE_1, EMAIL1);
 	PersonDto personDto1 = new PersonDto(PERSON_ID_1, NAME1, BIRTH_DATE_1, EMAIL1);
 	PersonDto personDto2 = new PersonDto(PERSON_ID_2, NAME2, BIRTH_DATE_2, EMAIL2);
@@ -126,11 +134,32 @@ class CarsServiceTest {
 
 	@Test
 	void testGetOwnerCars() {
+		List<CarDto> cars = carsService.getOwnerCars(PERSON_ID_1);
+		assertEquals(1, cars.size());
+		assertEquals(car1, cars.get(0));
+		assertThrowsExactly(NotFoundException.class, () -> carsService.getOwnerCars(PERSON_ID_NOT_EXISTS));
 	}
 
 	@Test
 	void testGetCarOwner() {
-		// TODO
+		PersonDto ownerActual = carsService.getCarOwner(CAR_NUMBER_1);
+		assertEquals(personDto1, ownerActual);
+		assertThrowsExactly(NotFoundException.class, () -> carsService.getCarOwner(CAR_NUMBER_3));
+	}
+
+	@Test
+	void testMostPopularModels() {
+		carsService.addCar(car3);
+		carsService.addCar(car4);
+		carsService.addCar(car5);
+		carsService.purchase(new TradeDealDto(CAR_NUMBER_3, PERSON_ID_1));
+		carsService.purchase(new TradeDealDto(CAR_NUMBER_4, PERSON_ID_2));
+		carsService.purchase(new TradeDealDto(CAR_NUMBER_5, PERSON_ID_2));
+		List<String> mostPopularModels = carsService.mostPopularModels();
+		String[] actual = mostPopularModels.toArray(String[]::new);
+		Arrays.sort(actual);
+		String[] expected = { MODEL1, MODEL2 };
+		assertArrayEquals(expected, actual);
 	}
 
 }
