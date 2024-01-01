@@ -19,8 +19,9 @@ public class CarsServiceImpl implements CarsService {
 	HashMap<String, Integer> modelsPurchaseAmounts = new HashMap<>();
 
 	@Override
-	public PersonDto addPerson(PersonDto personDto) {
+	synchronized public PersonDto addPerson(PersonDto personDto) {
 		long id = personDto.id();
+
 		if (owners.containsKey(id)) {
 			throw new IllegalStateException(String.format("person  %d already exists", id));
 		}
@@ -30,7 +31,7 @@ public class CarsServiceImpl implements CarsService {
 	}
 
 	@Override
-	public CarDto addCar(CarDto carDto) {
+	synchronized public CarDto addCar(CarDto carDto) {
 		String carNumber = carDto.number();
 		if (cars.containsKey(carNumber)) {
 			throw new IllegalStateException(String.format("car %s already exists", carNumber));
@@ -41,7 +42,7 @@ public class CarsServiceImpl implements CarsService {
 	}
 
 	@Override
-	public PersonDto updatePerson(PersonDto personDto) {
+	synchronized public PersonDto updatePerson(PersonDto personDto) {
 		long id = personDto.id();
 		hasCarOwner(id);
 		CarOwner carOwner = owners.get(id);
@@ -57,7 +58,7 @@ public class CarsServiceImpl implements CarsService {
 	}
 
 	@Override
-	public PersonDto deletePerson(long id) {
+	synchronized public PersonDto deletePerson(long id) {
 		hasCarOwner(id);
 		CarOwner carOwner = owners.get(id);
 		List<Car> cars = carOwner.getCars();
@@ -74,10 +75,11 @@ public class CarsServiceImpl implements CarsService {
 	}
 
 	@Override
-	public CarDto deleteCar(String carNumber) {
+	synchronized public CarDto deleteCar(String carNumber) {
 		hasCar(carNumber);
 		Car car = cars.get(carNumber);
 		CarOwner carOwner = car.getOwner();
+
 		carOwner.getCars().remove(car);
 		cars.remove(carNumber);
 		log.debug("car {} has been deleted", carNumber);
@@ -91,7 +93,7 @@ public class CarsServiceImpl implements CarsService {
 	}
 
 	@Override
-	public TradeDealDto purchase(TradeDealDto tradeDeal) {
+	synchronized public TradeDealDto purchase(TradeDealDto tradeDeal) {
 		log.debug("purchase: received car {}, owner {}", tradeDeal.carNumber(), tradeDeal.personId());
 		Long personId = tradeDeal.personId();
 		CarOwner carOwner = null;
@@ -104,7 +106,6 @@ public class CarsServiceImpl implements CarsService {
 			oldOwner.getCars().remove(car);
 		}
 		if (personId != null) {
-
 			log.debug("new owner {}", personId);
 			hasCarOwner(personId);
 			carOwner = owners.get(personId);
@@ -124,14 +125,14 @@ public class CarsServiceImpl implements CarsService {
 	}
 
 	@Override
-	public List<CarDto> getOwnerCars(long id) {
+	synchronized public List<CarDto> getOwnerCars(long id) {
 		log.debug("getOwnerCars for owner {}", id);
 		hasCarOwner(id);
 		return owners.get(id).getCars().stream().map(Car::build).toList();
 	}
 
 	@Override
-	public PersonDto getCarOwner(String carNumber) {
+	synchronized public PersonDto getCarOwner(String carNumber) {
 		log.debug("getCarOwner for car {}", carNumber);
 		hasCar(carNumber);
 		Car car = cars.get(carNumber);
@@ -147,7 +148,7 @@ public class CarsServiceImpl implements CarsService {
 	}
 
 	@Override
-	public List<String> mostPopularModels() {
+	synchronized public List<String> mostPopularModels() {
 		int maxAmount = Collections.max(modelsPurchaseAmounts.values());
 		log.trace("map of amounts {}", modelsPurchaseAmounts);
 		log.debug("maximal amount of purchases is {}", maxAmount);
