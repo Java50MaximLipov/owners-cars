@@ -1,19 +1,24 @@
 package telran.cars;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import telran.cars.dto.*;
 import static telran.cars.api.ValidationConstants.*;
 import telran.cars.exceptions.NotFoundException;
@@ -38,9 +43,11 @@ class CarsControllerTest {
 	private static final long WRONG_PERSON_ID = 123L;
 	static final String WRONG_PERSON_ID_TYPE = "abc";
 	static final String WRONG_CAR_NUMBER = "kikuk";
+
 	@MockBean // inserting into Application Context Mock instead of real Service
 				// implementation
 	CarsService carsService;
+
 	@Autowired // for injection of MockMvc from Application Context
 	MockMvc mockMvc;
 	CarDto carDto = new CarDto(CAR_NUMBER, "model", 2000, null, null, null);
@@ -221,6 +228,7 @@ class CarsControllerTest {
 
 	@Test
 	void testGetOwnerCarsPersonNotFound() throws Exception {
+
 		when(carsService.getOwnerCars(PERSON_ID)).thenThrow(new NotFoundException(PERSON_NOT_FOUND_MESSAGE));
 		String response = mockMvc.perform(get("http://localhost:8080/cars/person/" + PERSON_ID))
 				.andExpect(status().isNotFound()).andReturn().getResponse().getContentAsString();

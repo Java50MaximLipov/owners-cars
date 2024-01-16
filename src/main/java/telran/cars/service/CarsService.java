@@ -9,6 +9,8 @@ public interface CarsService {
 
 	CarDto addCar(CarDto carDto);
 
+	ModelDto addModel(ModelDto modelDto);
+
 	PersonDto updatePerson(PersonDto personDto);
 
 	PersonDto deletePerson(long id);
@@ -22,4 +24,5 @@ public interface CarsService {
 	PersonDto getCarOwner(String carNumber);
 
 	List<String> mostPopularModels();
+
 }

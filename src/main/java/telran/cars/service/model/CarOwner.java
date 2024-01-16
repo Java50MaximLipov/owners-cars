@@ -1,7 +1,6 @@
 package telran.cars.service.model;
 
 import java.time.LocalDate;
-import java.util.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,9 +14,11 @@ import jakarta.persistence.*;
 @Table(name = "car_owners")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CarOwner {
+
 	@Id
 	Long id;
 	String name;
+
 	@Column(nullable = false, name = "birth_date")
 	@Temporal(TemporalType.DATE)
 	LocalDate birthDate;
@@ -35,4 +36,5 @@ public class CarOwner {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 }

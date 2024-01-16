@@ -10,12 +10,16 @@ import telran.cars.dto.ModelDto;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class Model {
+
 	@EmbeddedId
 	ModelYear modelYear;
+
 	@Column(nullable = false)
 	String company;
+
 	@Column(name = "engine_power", nullable = false)
 	Integer enginePower;
+
 	@Column(name = "engine_capacity", nullable = false)
 	Integer engineCapacity;
 
@@ -27,4 +31,5 @@ public class Model {
 	public ModelDto build() {
 		return new ModelDto(modelYear.getName(), modelYear.getYear(), company, enginePower, engineCapacity);
 	}
+
 }

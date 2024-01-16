@@ -1,7 +1,5 @@
 package telran.cars.api;
 
-import java.time.LocalDate;
-
 public interface ValidationConstants {
 	String MISSING_CAR_NUMBER_MESSAGE = "Missing car number";
 	String CAR_NUMBER_REGEXP = "(\\d{3}-\\d{2}-\\d{3})|(\\d{2}-\\d{3}-\\d{2})";
@@ -11,6 +9,7 @@ public interface ValidationConstants {
 	long MIN_PERSON_ID_VALUE = 100000l;
 	long MAX_PERSON_ID_VALUE = 999999l;
 	int MIN_MODEL_YEAR = 2000;
+
 	String WRONG_MIN_PERSON_ID_VALUE = "Person ID must be greater or equal " + MIN_PERSON_ID_VALUE;
 	String WRONG_MAX_PERSON_ID_VALUE = "Person ID must be less or equal " + MAX_PERSON_ID_VALUE;
 	String MISSING_PERSON_NAME_MESSAGE = "Missing person name";
