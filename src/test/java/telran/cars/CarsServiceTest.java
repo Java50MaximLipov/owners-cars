@@ -2,10 +2,7 @@ package telran.cars;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
-import java.util.List;
 import telran.cars.exceptions.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +10,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import telran.cars.dto.*;
 import telran.cars.exceptions.IllegalPersonsStateException;
-import telran.cars.exceptions.NotFoundException;
 import telran.cars.repo.*;
 import telran.cars.service.CarsService;
 import telran.cars.service.ModelIllegalStateException;
@@ -60,6 +56,7 @@ class CarsServiceTest {
 	PersonDto personDto = new PersonDto(PERSON_ID_NOT_EXISTS, NAME1, BIRTH_DATE_1, EMAIL1);
 	PersonDto personDto1 = new PersonDto(PERSON_ID_1, NAME1, BIRTH_DATE_1, EMAIL1);
 	PersonDto personDto2 = new PersonDto(PERSON_ID_2, NAME2, BIRTH_DATE_2, EMAIL2);
+
 	@Autowired
 	CarsService carsService;
 
@@ -162,36 +159,57 @@ class CarsServiceTest {
 	}
 
 	@Test
-	@Disabled
+	/**
+	 * test of the method getOwnerCars the method has been written at CW #64
+	 */
 	void testGetOwnerCars() {
-		List<CarDto> cars = carsService.getOwnerCars(PERSON_ID_1);
-		assertEquals(1, cars.size());
-		assertEquals(car1, cars.get(0));
-		assertThrowsExactly(NotFoundException.class, () -> carsService.getOwnerCars(PERSON_ID_NOT_EXISTS));
+		// TODO
 	}
 
 	@Test
-	@Disabled
+	/**
+	 * test of the method getCarOwner the method has been written at CW #64
+	 */
 	void testGetCarOwner() {
-		PersonDto ownerActual = carsService.getCarOwner(CAR_NUMBER_1);
-		assertEquals(personDto1, ownerActual);
-		assertThrowsExactly(NotFoundException.class, () -> carsService.getCarOwner(CAR_NUMBER_3));
+		// TODO
 	}
 
 	@Test
-	@Disabled
-	void testMostPopularModels() {
-		carsService.addCar(car3);
-		carsService.addCar(car4);
-		carsService.addCar(car5);
-		carsService.purchase(new TradeDealDto(CAR_NUMBER_3, PERSON_ID_1, null));
-		carsService.purchase(new TradeDealDto(CAR_NUMBER_4, PERSON_ID_2, null));
-		carsService.purchase(new TradeDealDto(CAR_NUMBER_5, PERSON_ID_2, null));
-		List<String> mostPopularModels = carsService.mostPopularModels();
-		String[] actual = mostPopularModels.toArray(String[]::new);
-		Arrays.sort(actual);
-		String[] expected = { MODEL1, MODEL2 };
-		assertArrayEquals(expected, actual);
+	/**
+	 * test of the method mostSoldModelNames the method has been written at CW #64
+	 */
+	void testMostSoldModelNames() {
+		// TODO
+	}
+
+	@Test
+	/**
+	 * test of the method mostPopularModelNames the method has been written at CW
+	 * #64
+	 */
+	void testMostPopularModelNames() {
+		// TODO
+	}
+
+	// tests for the methods of the HW #64
+	@Test
+	void testCountTradeDealAtMonthModel() {
+		// TODO
+	}
+
+	@Test
+	void testMostPopularModelNameByOwnerAges() {
+		// TODO
+	}
+
+	@Test
+	void testOneMostPopularColorModel() {
+		// TODO
+	}
+
+	@Test
+	void testMinEnginePowerCapacityByOwnerAges() {
+		// TODO
 	}
 
 }
