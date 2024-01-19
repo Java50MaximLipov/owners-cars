@@ -84,20 +84,23 @@ public class CarsServiceImpl implements CarsService {
 	@Transactional
 	public TradeDealDto purchase(TradeDealDto tradeDealDto) {
 		Car car = carRepo.findById(tradeDealDto.carNumber()).orElseThrow(() -> new CarNotFoundException());
-		CarOwner carOwner = null;
+		CarOwner oldCarOwner = car.getCarOwner();
+		CarOwner newCarOwner = null;
 		Long personId = tradeDealDto.personId();
 		if (personId != null) {
 			log.debug("ID of new car's owner is {}", personId);
-			carOwner = carOwnerRepo.findById(personId).orElseThrow(() -> new PersonNotFoundException());
-			if (car.getCarOwner().getId() == personId) {
+			newCarOwner = carOwnerRepo.findById(personId).orElseThrow(() -> new PersonNotFoundException());
+			if (oldCarOwner != null && oldCarOwner.getId() == personId) {
 				throw new TradeDealIllegalStateException();
 			}
+		} else if (oldCarOwner == null) {
+			throw new TradeDealIllegalStateException();
 		}
 		TradeDeal tradeDeal = new TradeDeal();
 		tradeDeal.setCar(car);
-		tradeDeal.setCarOwner(carOwner);
+		tradeDeal.setCarOwner(newCarOwner);
 		tradeDeal.setDate(LocalDate.parse(tradeDealDto.date()));
-		car.setCarOwner(carOwner);
+		car.setCarOwner(newCarOwner);
 		tradeDealRepo.save(tradeDeal);
 		log.debug("trade: {} has been saved", tradeDealDto);
 		return tradeDealDto;
@@ -118,6 +121,7 @@ public class CarsServiceImpl implements CarsService {
 	@Override
 	public List<String> mostPopularModels() {
 		// Not Implemented yet
+
 		return null;
 	}
 
