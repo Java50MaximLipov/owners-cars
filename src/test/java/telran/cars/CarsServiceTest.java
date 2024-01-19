@@ -3,19 +3,14 @@ package telran.cars;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import telran.cars.exceptions.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.jdbc.Sql;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import telran.cars.dto.*;
 import telran.cars.exceptions.IllegalPersonsStateException;
 import telran.cars.exceptions.NotFoundException;
@@ -45,13 +40,15 @@ class CarsServiceTest {
 	private static final String BIRTH_DATE_2 = "2000-10-10";
 	private static final String EMAIL2 = "name2@gmail.com";
 	private static final Long PERSON_ID_NOT_EXISTS = 1111111111L;
-
 	private static final String NEW_EMAIL = "name1@tel-ran.co.il";
 	private static final String DATE_TRADE_DEAL_1 = "2024-01-01";
+
 	@Autowired
 	CarOwnerRepo carOwnerRepo;
+
 	@Autowired
 	CarRepo carRepo;
+
 	@Autowired
 	TradeDealRepo tradeDealRepo;
 
@@ -72,7 +69,6 @@ class CarsServiceTest {
 		assertThrowsExactly(IllegalPersonsStateException.class, () -> carsService.addPerson(personDto));
 		CarOwner carOwner = carOwnerRepo.findById(personDto.id()).orElse(null);
 		assertEquals(personDto, carOwner.build());
-
 	}
 
 	@Test
@@ -81,7 +77,6 @@ class CarsServiceTest {
 		CarDto carNoModel = new CarDto("11111111111", MODEL1, 2018, "green", 100000, CarState.OLD);
 		assertThrowsExactly(IllegalCarsStateException.class, () -> carsService.addCar(car4));
 		assertThrowsExactly(ModelNotFoundException.class, () -> carsService.addCar(carNoModel));
-
 	}
 
 	@Test
@@ -102,18 +97,14 @@ class CarsServiceTest {
 	@Test
 
 	void testDeletePerson() {
-
 		assertEquals(personDto1, carsService.deletePerson(PERSON_ID_1));
 		assertThrowsExactly(PersonNotFoundException.class, () -> carsService.deletePerson(PERSON_ID_1));
-
 	}
 
 	@Test
 	void testDeleteCar() {
-
 		assertEquals(car1, carsService.deleteCar(CAR_NUMBER_1));
 		assertThrowsExactly(CarNotFoundException.class, () -> carsService.deleteCar(CAR_NUMBER_1));
-
 	}
 
 	@Test
@@ -126,7 +117,6 @@ class CarsServiceTest {
 		assertEquals(CAR_NUMBER_1, tradeDeal.getCar().getNumber());
 		assertEquals(PERSON_ID_2, tradeDeal.getCarOwner().getId());
 		assertEquals(DATE_TRADE_DEAL_1, tradeDeal.getDate().toString());
-
 	}
 
 	@Test
@@ -140,7 +130,6 @@ class CarsServiceTest {
 		assertEquals(CAR_NUMBER_4, tradeDeal.getCar().getNumber());
 		assertEquals(PERSON_ID_2, tradeDeal.getCarOwner().getId());
 		assertEquals(DATE_TRADE_DEAL_1, tradeDeal.getDate().toString());
-
 	}
 
 	@Test
@@ -149,7 +138,6 @@ class CarsServiceTest {
 		TradeDealDto tradeDealOwnerNotFound = new TradeDealDto(CAR_NUMBER_1, PERSON_ID_NOT_EXISTS, DATE_TRADE_DEAL_1);
 		assertThrowsExactly(PersonNotFoundException.class, () -> carsService.purchase(tradeDealOwnerNotFound));
 		assertThrowsExactly(CarNotFoundException.class, () -> carsService.purchase(tradeDealCarNotFound));
-
 	}
 
 	@Test
@@ -204,7 +192,6 @@ class CarsServiceTest {
 		Arrays.sort(actual);
 		String[] expected = { MODEL1, MODEL2 };
 		assertArrayEquals(expected, actual);
-
 	}
 
 }

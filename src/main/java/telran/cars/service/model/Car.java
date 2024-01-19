@@ -5,6 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import telran.cars.dto.CarDto;
 import telran.cars.dto.CarState;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -25,6 +29,7 @@ public class Car {
 	@ManyToOne
 	@JoinColumn(name = "owner_id", nullable = true)
 	@Setter
+	@OnDelete(action = OnDeleteAction.SET_NULL)
 	CarOwner carOwner;
 	String color;
 
