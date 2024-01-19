@@ -1,15 +1,17 @@
 package telran.cars.service.model;
 
-import lombok.*;
-import telran.cars.dto.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import telran.cars.dto.CarDto;
+import telran.cars.dto.CarState;
 import jakarta.persistence.*;
 
 @Entity
 @Getter
 @Table(name = "cars")
-
+@NoArgsConstructor
 public class Car {
-
 	@Id
 	@Column(name = "car_number")
 	String number;
@@ -24,7 +26,6 @@ public class Car {
 	@JoinColumn(name = "owner_id", nullable = true)
 	@Setter
 	CarOwner carOwner;
-
 	String color;
 
 	@Setter
