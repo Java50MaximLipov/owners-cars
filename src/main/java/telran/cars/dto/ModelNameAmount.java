@@ -4,4 +4,5 @@ public interface ModelNameAmount {
 	String getName();
 
 	Long getAmount();
+
 }
