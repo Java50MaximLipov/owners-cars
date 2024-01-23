@@ -45,6 +45,11 @@ public class CarsController {
 		return carsService.addPerson(personDto);
 	}
 
+	@PostMapping("query")
+	List<String> getQueryResult(@RequestBody QueryDto queryDto) {
+		return carsService.anyQuery(queryDto);
+	}
+
 	@PutMapping("person")
 	PersonDto updatePerson(@RequestBody @Valid PersonDto personDto) {
 		log.debug("updatePerson: received personData data: {}", personDto);

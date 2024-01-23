@@ -35,4 +35,7 @@ public interface CarsService {
 	String oneMostPopularColorModel(String model);
 
 	EnginePowerCapacity minEnginePowerCapacityByOwnerAges(int ageFrom, int ageTo);
+
+//CW #65
+	List<String> anyQuery(QueryDto queryDto);
 }

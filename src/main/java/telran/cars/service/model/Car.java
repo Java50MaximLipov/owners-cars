@@ -3,8 +3,7 @@ package telran.cars.service.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import telran.cars.dto.CarDto;
-import telran.cars.dto.CarState;
+import telran.cars.dto.*;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -16,6 +15,7 @@ import jakarta.persistence.*;
 @Table(name = "cars")
 @NoArgsConstructor
 public class Car {
+
 	@Id
 	@Column(name = "car_number")
 	String number;
@@ -31,6 +31,7 @@ public class Car {
 	@Setter
 	@OnDelete(action = OnDeleteAction.SET_NULL)
 	CarOwner carOwner;
+
 	String color;
 
 	@Setter
@@ -53,6 +54,11 @@ public class Car {
 		this.color = color;
 		this.kilometers = kilometers;
 		this.state = state;
+	}
+
+	@Override
+	public String toString() {
+		return "Car [number=" + number + ", color=" + color + ", kilometers=" + kilometers + ", state=" + state + "]";
 	}
 
 }
