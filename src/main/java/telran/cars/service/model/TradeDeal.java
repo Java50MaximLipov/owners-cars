@@ -17,7 +17,7 @@ public class TradeDeal {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "car_number", nullable = false)
 	@Setter
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -32,4 +32,5 @@ public class TradeDeal {
 	@Temporal(TemporalType.DATE)
 	@Setter
 	LocalDate date;
+
 }
